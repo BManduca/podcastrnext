@@ -1,0 +1,412 @@
+Next.js
+  - quando utilizamos o Next dentro do React, temos o funcionamento totalmente automatizado.
+  - quando desabilitamos o javascript, somente será desabilitado do lado do client, do browser e assim, 
+  fica claro, que se tudo se manteve como era, ou seja, que a interface não esta sendo construída 
+  pelo javascript do client-side e sim pelo javascript que ta rodando la dentro do nosso serviço
+  com o Next em si. 
+
+  Aula 02:
+  typescript:
+    - Ajuda na escrita, na hora da chamada das funções.
+    - Será utilizado bastante o typescript dentro dos componentes do React.
+      - principalmente na parte de tipagem das propriedades de um component.
+    - Ajuda a não cometer erros e ter mais segurança na manutenção do código, 
+    onde o próprio editor vai avisar, se estamos chamando algo errado ou passando 
+    um parâmetro errado, facilitando assim o codar ou a manutenção.
+
+    - comandos:
+      - sudo yarn dev: subir o server
+      - sudo yarn add typescript @types/react @types/node -D
+        - typescript é o próprio TS
+        - @types/react: integração do react com o TS
+        - @types/node: integração do node com o TS
+        Algumas bibliotecas trazem essa integração junto da própria biblioteca, outras criam um pacote terceiros, desta forma, 
+        sempre é preciso instalar a parte
+        - será instalado como dependência de desenvolvimento, porque o typescript só roda em desenvolvimento, em produção
+        o código é convertido totalmente para javascript, que não tem tipagem, sendo assim, em produção não precisa dessa 
+        dependência.
+
+    - curiosidades: 
+      - porque .tsx?
+        - Essa extensão vem de: typescript + jsx
+          - jsx é a sintaxe de (xml no javascript)
+
+    - SASS: 
+      - pré-processador CSS, que permite escrever o CSS de uma maneira diferente
+      - permite o encadeamento(cascata) de CSS
+      - Formato passa de .css para .scss
+
+      root -> local aonde será definido as variáveis css que estarão definidos para todo projeto.
+
+      - uso da medida rem
+        - para grande maioria de medidas de tamanho, fonts e tudo mais...
+        - mas porque?
+          - para cada rem, equivale ao tamanho do font-size do meu root(html), por isso
+          a sigla rem, ou seja, 'root em'
+          - se fosse so em, ele pegaria  tamanho relativo ao elemento que está por volta 
+          daquele texto, mas ao colocar rem, estará usando o tamanho relativo ao root da minha
+          página, ou seja, meu html...
+            - Exemplo:
+              html {
+                font-size: 10px;
+              }
+
+              h1 {
+                font-size: 2rem; //o 2rem é equivalente a 2 * 10px = 20px;
+              }
+
+            - outra questão, caso a tela do user seja um pouco menor:
+              @media (max-width: 1080px) {
+                html {
+                  font-size: 93.75%; //15px -> 16 * 0,9375
+                }
+              }
+              - essa porcentagem vai refatorar todo o tamanho, para que não 
+              fique algo desproporcional da tela do user com relação ao texto, 
+              trazendo assim uma UX desconfortável para o user.
+
+    - Fontes utilizadas no projeto: 
+      - acessar fonts.google.com
+      - pegar as fontes Lexend e inter
+
+      - na pasta pages, por padrão o next traz um arquivo chamado app
+        - este arquivo, automaticamente fica por volta de todas as páginas do app, 
+        pois ele é basicamente um arquivo global.
+        - O next tem um sistemas de rotas próprios, por exemplo acessando 
+        a rota principal do meu app, acaba 'caindo' no index, 
+        se existisse outro arquivo, como contato.tsx por exemplo e acessasse 
+        esta rota, automaticamente iria acessar o arquivo contato.tsx
+        - A chamar qualquer outra rota ou arquivo, o app sempre será chamado 
+        em conjunto
+
+        - criando um arquivo _document.tsx
+          - arquivo para configurar qual é o documento, qual que é  
+          formato do HTML
+          - no create-react-app, na pasta public tinha um arquivo index.html e
+          neste arquivo tinha html, head, body... No next nã temos este arquivo, 
+          por isso, se quisermos customizar o conteúdo daquele html, precisamos 
+          fazer via o _document.tsx, este arquivo ficara em volta de toda nossa aplicação, 
+          porém, ele será chamado uma única vez.
+          - dentro do _document.tsx, temos o Html, dentro do mesmo temos as 
+          tags head e body, dentro do body temos as tags Main e NextScript, no main
+          é aonde ficará toda nossa aplicação e no NextScript, é aonde rodará 
+          todos os scripts que o next precisa implementa/injeta na nossa aplicação
+          para que ela funcione .
+
+
+- No react ao utilizarmos classes, não chamamos as mesmas via class, mas através de 
+className, que é uma particularidade do próprio react e também o class em si, é uma 
+palavra reservada do javascript.
+- Hoje conseguimos criar arquivos css específicos de um componente, as regras por exemplo
+do header nunca serão compartilhadas com outros componentes da nossa aplicação, outro exemplo,
+é se  que eu estivesse estilizando fosse um title, eu não precisaria me preocupar se na minha 
+aplicação tem outro title, porque essa estilização que eu to fazendo é especifica para o arquivo 
+que está no Header, então na hora de importar no index.tsx, podemos importar da seguinte forma:
+import styles from './styles.module.scss' e no className do header, colocamos entre {}, pois,
+estaremos colocando uma variável javascript dentro, ficando da seguinte forma:
+<header className={styles.headerContainer}>...</header>
+
+- No span, foi colocado uma estilização da seguinte forma: 
+margin-left: auto; e text-transform: capitalize;, onde  margin-left sendo auto, 
+faz com que todo o espaço a esquerda seja utilizado e o text-transform sendo capitalize, será
+colocado sempre a primeira letra das palavras sempre em maiúsculo.
+
+- Para estilizar e mexer com data no javascript, resultando em uma melhor experiência, vamos add 
+a biblioteca date-fns do yarn da seguinte forma: sudo yarn add date-fns
+
+- Para pegar a data current da região aonde eu moro, podemos fazer da seguinte forma: 
+  const currentDate = format(new Date(), 'EEEEEE, d MMMM',{
+    locale: ptBR,
+  });
+
+  Onde: EEEEEE significa que o dia da semana estará no formato Mo, Tu, We, Th, Fr, Su, Sa, 
+  o d é o dia do mês nesse formato: 1, 2, ..., 31 e o MMMM é o nome do mês, que estará no formato 
+  January, February, ..., December
+
+
+- Criação do player: 
+  - Criamos a pasta(diretório) do Player, com base no do header
+  - criamos um um .scss para estilizar o app (app.module.scss)
+    - onde foi definido no _app.tsx uma className como styles.wrapper
+    - no scss colocamos o display como flex
+    - tag main que tem dentro do wrapper tem um flex 1, ou seja, ocupe o máximo do 
+    espaço possível e seja flexível.
+    - no index.tsx, na div presente no return colocamos uma className={styles.playerContainer}
+    e no arquivo styles.module.scss de estilização, definimos o width: 26.5rem e o
+  height: 100vh, so explicando o 100vh condiz com 100% do viewport, ou seja, o máximo da
+  altura da tela. 
+
+- JSON.stringify:
+  - O método JSON.stringify() converte valores em javascript para uma String  JSON. Esses valores 
+  podem ser substituídos especificando a função replacer, ou incluindo somente as propriedades específicas, 
+  quando o array do replacer for especificado.
+
+  - Sintaxe: JSON.stringify(valor[, replacer[, espaço]])
+    > valor: O valor a ser convertido para uma string JSON.
+
+    > replacer: Uma função que altera o comportamento do processo de transformação em string, ou um array 
+    de objetos String e Number que servem como uma lista branca para selecionar as propriedades do objeto 
+    valor a ser incluído na string JSON. Se este valor for nulo ou não fornecido, todas as propriedades do 
+    objeto são incluídas na string JSON resultante.
+
+    > espaço: Um objeto String ou Number que é usado para inserir espaço em branco na saída da string 
+    JSON para propósito de legibilidade. Se isto for um Number, indica o número de caracteres espaço para 
+    usar como espaço em branco; este número é limitado em 10 se for maior que isso. Valores menores que 1 
+    indicam que nenhum espaço deve ser usado. Se isto for uma String, a string (ou os primeiros 10 caracteres 
+    da string, se for maior que isso) é usado como espaço em branco. Se esse parâmetro não for fornecido (ou for null), 
+    nenhum espaço em branco é usado.
+
+
+- Maneiras de consumir uma API:
+
+- SPA
+  - no SPA existe uma função que vem de dentro do React, chamada useEffect(), onde ela basicamente 
+  é uma função do React que dispara algo sempre que algo mudar na nossa aplicação, ou seja, algum efeito colateral.
+  - no arquivo index.tsx: 
+      import { useEffect } from "react"
+
+      export default function Home(props) {
+      //usando SPA
+      useEffect(() => {
+        fetch('http://localhost:3333/episodes')
+        .then(response => response.json())
+        .then(data => console.log(data))
+      },[])
+      return (
+        <div>
+          <h1>Index</h1>
+          <p>{JSON.stringify(props.episodes)}</p>
+        </div>
+      )
+    }
+
+- SSR
+  - ficaria da seguinte forma:
+
+      export default function Home(props) {
+        return (
+          <div>
+            <h1>Index</h1>
+            <p>{JSON.stringify(props.episodes)}</p>
+          </div>
+        )
+      }
+
+      //utilizando o SSR
+      export async function getServerSideProps() {
+        const response = await fetch('http://localhost:3333/episodes')
+        const data = await response.json()
+
+        return {
+          props: {
+            episodes: data,
+          }
+        }
+      }
+
+
+- SSG:
+    - ficaria da seguinte forma:
+  
+      export default function Home(props) {
+        return (
+          <div>
+            <h1>Index</h1>
+            <p>{JSON.stringify(props.episodes)}</p>
+          </div>
+        )
+      }
+
+      //Para utilizar o SSG, basta trocar o nome da function
+      export async function getStaticProps() {
+        const response = await fetch('http://localhost:3333/episodes')
+        const data = await response.json()
+
+        return {
+          props: {
+            episodes: data,
+          },
+          //o revalidate recebe um numero em segundos, de quanto em quanto tempo, eu gostaria que gerasse uma 
+          // nova versão desta página
+          revalidate:
+        }
+      }
+
+- Rodando o servidor:
+  - sudo yarn server
+
+- montando uma build do projeto:
+  - sudo yarn build
+
+- Rodar o projeto como se estivesse em produção:
+  - sudo yarn start, gerando assim a nossa pagina de forma estática.
+
+
+
+Aula 03: 
+
+- ao realizar o import { GetStaticProps } from 'next';
+  - Estaremos definindo a tipagem da função, determinando o formato da função, o retorno da função.
+  - Para tipar a 'função' por completo, transformamos a function em uma constante(const), da seguinte forma:
+      - export const getStaticProps: GetStaticProps = async () => {
+        // fazendo desta forma, tanto os parâmetros da function quanto o return estão tipados.
+      }
+
+
+- Criando um tipo HomeProps, que são as propriedades que o component home recebe:
+  - type/interface HomeProps {
+        //episodes é um array de objects
+        episodes: Array<{
+            id: string;
+            title: string;
+            members: string;
+            //...
+        }>
+    }
+
+    - formas para declarar um array em typescript: 
+      type HomeProps = {
+        episodes: Array<Episode>;
+        //ou episodes: Episode[];
+      }
+
+    - aplicando propriedades através do fetch, para organizar os podcasts:
+      - o fetch é uma API que vem já dentro do browser.
+      - fetch('http://localhost:3333/episodes?_limit=12&_sort=published_at&_order=desc')
+        - onde: 
+          - o _limit, estará limitando o número de podcasts por page
+          - _sort, estará ordenando por um campo específico, definido pelo dev
+          - _order, estará identificando se vai ser decrescente ou crescente.
+      - uma alternativa para o fetch, até em projetos maiores, seria o axios.
+          - sudo yarn add axios
+            - O axios é uma biblioteca, para fazer requisições http, assim como  próprio fetch,
+            porém, ele trás algumas funcionalidades a mais, que não são encontradas no fetch:
+              - uma delas é o entendimento por padrão do JSON
+              - é possível setar uma base url, que é aquela url que vai se repetir para todas as chamadas da API
+
+      - Quando nos deparamos com um trecho de código que se repete em todas as páginas?
+        - realizamos a adição da biblioteca axios como citado acima 
+        - criamos um folder services dentro do src e também o arquivo api.ts
+        - no arquivo api.ts:
+          - realizamos o import:import axios from 'axios';
+          - criamos uma constante para fazer a chamada do trecho base da url:
+              - export const api = axios.create({
+                  baseURL: 'http://localhost:3333/'
+                })
+          - após o processo acima, podemos codar desta forma:
+            export const getStaticProps: GetStaticProps = async () => {
+              const response = await api.get('http://localhost:3333/episodes?_limit=12&_sort=published_at&_order=desc')
+              const data = response.data    //antes: const data = await response.json()
+
+              /* código omitido */
+              
+              }
+            }
+
+            ou também podemos desestruturar:
+             - const { data } = await api.get('episodes?_limit=12&_sort=published_at&_order=desc')
+             e deletar a linha const data = response.data
+
+          - outro parâmetro que podemos passar com auxílio do axios também deixando o endereço mais interessante,
+           passando assim um array de objetos de configurações e dentro do objeto, o axios permite escrever estes 
+           parâmetros da rota em formato Javascript e não somente como texto.
+            - await api.get('episodes',{
+                params: {
+                  _limit: 12, 
+                  _sort: 'published_at',
+                  _order: 'desc'
+                }
+            })
+
+          - Trabalhando agora com os dados consumidos pela nossa API, ou seja, vindos do Back-end:
+              - retiramos aquela parte do stringify que estava send realizado no return da function,
+              como podemos ver a seguir:
+                export default function Home(props: HomeProps) {
+                  return (
+                    <div>
+                      <h1>Index</h1>
+                      <p>{JSON.stringify(props.episodes)}</p> <- aqui retiramos tudo que está entre {}
+                    </div>
+                  )
+                }
+
+              - resultando assim:
+                export default function Home(props: HomeProps) {
+                  return (
+                    <div>
+                      <h1>Index</h1>
+                      <p>{JSON.stringify(props.episodes)}</p> <- aqui retiramos tudo que está entre {}
+                    </div>
+                  )
+                }
+
+                e dentro agora do getStaticProps, vamos criar uma const episodes:
+                  const episodes = data.map(episode => {
+                    return {
+                      id: episode.id,
+                      title: episode.title,
+                      thumbnail: episode.thumbnail,
+                      members: episode.members,
+                      publishedAt: 
+                    }
+                  })
+
+                Antes de completar a chamada da data, foi preciso importar duas funções do date-fns:
+                import { format, parseISO } from 'date-fns';
+                  - parseISO serve para pegar uma data(ex.: data no format string) e converter para um date do javascript,
+                  resultando assim:
+                      - publishedAt: format(parseISO(episode.published_at),'d MMM YY'); // d -> dia | MMM -> mês | YY -> ano
+
+                - agora envolvendo a questão de duração do podcast, iremos fazer o seguinte:
+                  - criamos um folder chamado utils na raiz do projeto, dentro criamos o arquivo 
+                  convertDurationToTimeString.ts, onde declaramos o seguinte:
+                    export function convertDurationToTimeString(duration: number) {
+                        // math.floor serve para arredondar para o menor número que sobra dessa divisão
+                        const hours = math.floor(duration / 3600;)
+                        const minutes = Math.floor((duration % 3600) / 60);
+                        const seconds = duration % 60;
+
+                        //faqzendo o map no array, com relação as unidade, onde 
+                        //estarei convertendo cada unidade em uma string e utilizando a 
+                        função padStart, onde, por exemplo a hora retornar como 2, 
+                        essa função estará adicionando o 0 na frente do 2, resultando em 02
+                        const finalResult = [hours, minutes, seconds]
+                            .map(unit => String(unit).padStart(2,'0');
+                      }
+
+                    - ao salvarmos e inspecionar nossa página, no console estará mostrando o seguinte erro:
+                      - Each child in a list should have a unique "key" prop.
+                      - e porque esse erro?
+                        - Quando realizamos um map ou uma estrutura de repetição dentro do react, precisamos obrigatoriamente
+                        no primeiro elemento que vem logo dentro do return, adicionar uma propriedade, que é uma propriedade
+                        somente para o react e esta se chama key, na verdade ela já existe em todos os componentes por padrão, 
+                        dos elementos do react, mas precisamos colocar ela no primeiro elemento que vem dentro do map e iremos
+                        colocar nesta propriedade, qual informação única que existe entre cada uma dos episódios, que seria o
+                        id, pois, é um elemento que não se repete, por isso o usamos como chave para cada episódio da lista
+                          - esta funcionalidade é justamente uma questão de performance.
+
+  - Roteamento e slug
+    - criação de uma URL amigável
+    - Poderíamos até criar um /Episode, mas ficaria uma rota com nome genérico, mas que retratasse 
+    de um único episode.
+    - Para evitar o carregamento todo da tela, ao acessarmos um episode, podemos fazer da seguinte forma:
+      - fazer o import: import Link from 'next/link';
+      - na div que tem o className = styles.episodeDetails, tínhamos o seguinte:
+        - <a href={`/episodes/${episode.id}`}>{episode.title}</a>
+        - após inserirmos o import do link, este trecho ficara assim: 
+              <div className={styles.episodeDetails}>
+                <Link href={`/episodes/${episode.id}`}>
+                  <a>{episode.title}</a>
+                </Link>
+                /* código omitido */
+              </div>
+        - ao fazer esta mudança, toda vez que acessarmos um episode, ele não 
+        efetuara o carregamento de toda a página do 0, e sim, so o conteúdo da 
+        própria página
+        - Com o next não perdemos flexibilidade do react
+        - muitas vezes por mais que estejamos utilizando dados parecidos em duas ou mais funções, 
+        não necessariamente automatizar código, para deixar menos verboso, seja a melhor saída em typescript...
+        porque na hora de efetuar manutenção, pode vir a dar problemas em partes do código que nao eram
+        pra ocorrer, dando muito mais dor de cabeça posteriormente, mais vale um codigo nao automatizado, 
+        porém, bem escrito e funcionando do que um automatizado, mas que possa dar erros futuramente.
+                
