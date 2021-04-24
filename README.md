@@ -30,7 +30,7 @@
         <li>sudo yarn add nome_da_biblioteca</li>
       </ul>
   </li>
-  
+  <br>
   <p>-------------------------------------------------------------------</p>
   
   <h3>Comandos para subir e testar como se estivesse em produção: </h3>
