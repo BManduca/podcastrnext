@@ -2,14 +2,14 @@
 <h3>PodCastr - Player para executar episódios de um podcast.</h3>
 
 
-<h2> Para subir op projeto: </h2>
+<h2> Comandos para subir op projeto: </h2>
 
 <ul>
   
   <li> Subindo a aplicação em ambiente desenvolvimento: 
-    <lu>
+    <ol>
       <li>sudo yarn dev</li>
-    </lu>
+    </ol>
   </li>
   
   <li> Subindo server: 
