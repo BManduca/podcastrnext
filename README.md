@@ -24,9 +24,9 @@
     </lu>
   </li>
   
-  <ul>
-      <h1>Comandos para subir e testar como se estivesse em produção: </h1>
-  
+  <h1>Comandos para subir e testar como se estivesse em produção: </h1>
+
+  <div>
       <li> Montando uma build do projeto: 
         <lu>
           <li>sudo yarn build</li>
@@ -38,6 +38,6 @@
           <li>sudo yarn start</li>
         </lu>
       </li>
+  </div>
       
-  </ul>
 </ul>
