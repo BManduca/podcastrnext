@@ -6,11 +6,9 @@
 
 <ul>
   
-  <ul> Subindo a aplicação em ambiente desenvolvimento: 
-    <li>
+  <li> Subindo a aplicação em ambiente desenvolvimento: 
       <li>sudo yarn dev</li>
-    </li>
-  </ul>
+  </li>
   
   <li> Subindo server: 
     <lu>
