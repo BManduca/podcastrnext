@@ -5,24 +5,24 @@
 
 <ul>
   
-  <p>-------------------------------------------------------------------</p>
+  <span>-------------------------------------------------------------------</span>
   
   <h4>Comandos para subir e testar como se estivesse em dev: </h4>
+
+  <li> Subindo a aplicação em ambiente desenvolvimento: 
+      <ul>
+        <li>sudo yarn dev</li>
+      </ul>
+  </li>
+
+  <li> Subindo o servidor: 
+      <ul>
+        <li>sudo yarn sever</li>
+      </ul>
+  </li>
+  <br>
   
-    <li> Subindo a aplicação em ambiente desenvolvimento: 
-        <ul>
-          <li>sudo yarn dev</li>
-        </ul>
-    </li>
- 
-    <li> Subindo o servidor: 
-        <ul>
-          <li>sudo yarn sever</li>
-        </ul>
-    </li>
-    <br>
-  
-  <p>-------------------------------------------------------------------</p>
+  <span>-------------------------------------------------------------------</span>
   
   <h3> Bibliotecas: </h3>
   
@@ -33,7 +33,7 @@
   </li>
   <br>
   
-  <p>-------------------------------------------------------------------</p>
+  <span>-------------------------------------------------------------------</span>
   
   <h3>Comandos para subir e testar como se estivesse em produção: </h3>
   
@@ -50,6 +50,6 @@
   </li>
   <br>
   
-  <p>-------------------------------------------------------------------</p>
+  <span>-------------------------------------------------------------------</span>
       
 </ul>
