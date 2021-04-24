@@ -7,7 +7,7 @@
   
   <span>-------------------------------------------------------------------</span>
   
-  <h4>Comandos para subir e testar como se estivesse em dev: </h4>
+  <h2>Comandos para subir e testar como se estivesse em dev: </h2>
 
   <li> Subindo a aplicação em ambiente desenvolvimento: 
       <ul>
@@ -24,7 +24,7 @@
   
   <span>-------------------------------------------------------------------</span>
   
-  <h3> Bibliotecas: </h3>
+  <h2> Bibliotecas: </h2>
   
   <li> Adicionando bibliotecas: 
       <ul>
@@ -35,7 +35,7 @@
   
   <span>-------------------------------------------------------------------</span>
   
-  <h3>Comandos para subir e testar como se estivesse em produção: </h3>
+  <h2>Comandos para subir e testar como se estivesse em produção: </h2>
   
   <li> Montando uma build do projeto: 
       <ul>
