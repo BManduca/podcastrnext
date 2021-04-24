@@ -7,20 +7,22 @@
   
   <p>-------------------------------------------------------------------</p>
   
-  <h3>Comandos para subir e testar como se estivesse em dev: </h3>
-  
-  <li> Subindo a aplicação em ambiente desenvolvimento: 
-      <ul>
-        <li>sudo yarn dev</li>
-      </ul>
+  <li>Comandos para subir e testar como se estivesse em dev: 
+    <ul>
+      <li> Subindo a aplicação em ambiente desenvolvimento: 
+          <ul>
+            <li>sudo yarn dev</li>
+          </ul>
+      </li>
+
+      <li> Subindo o servidor: 
+          <ul>
+            <li>sudo yarn sever</li>
+          </ul>
+      </li>
+      <br>
+    </ul>
   </li>
-  
-  <li> Subindo o servidor: 
-      <ul>
-        <li>sudo yarn sever</li>
-      </ul>
-  </li>
-  <br>
   
   <p>-------------------------------------------------------------------</p>
   
