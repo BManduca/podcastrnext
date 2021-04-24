@@ -1,7 +1,7 @@
 # PodCastr - Player para executar episódios de um podcast.
 
 
-<h3> Comandos para subir o projeto: </h3>
+<h1> Comandos para subir o projeto: </h1>
 
 <ul>
   
@@ -33,7 +33,7 @@
   
   <p>-------------------------------------------------------------------</p>
   
-  <h1>Comandos para subir e testar como se estivesse em produção: </h1>
+  <h3>Comandos para subir e testar como se estivesse em produção: </h3>
   
   <li> Montando uma build do projeto: 
       <ul>
