@@ -1,3 +1,12 @@
+----------------------------------------------------------------------
+git init
+git add README.md ou git add .
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/BManduca/Nome_diretorio.git
+git push -u origin main
+----------------------------------------------------------------------
+
 Next.js
   - quando utilizamos o Next dentro do React, temos o funcionamento totalmente automatizado.
   - quando desabilitamos o javascript, somente será desabilitado do lado do client, do browser e assim, 
@@ -409,4 +418,272 @@ Aula 03:
         porque na hora de efetuar manutenção, pode vir a dar problemas em partes do código que nao eram
         pra ocorrer, dando muito mais dor de cabeça posteriormente, mais vale um codigo nao automatizado, 
         porém, bem escrito e funcionando do que um automatizado, mas que possa dar erros futuramente.
+    
+    - como fazer o botão de retorno, efetuar o retorno para a página anterior?
+        - Existem algumas formas de aplicar essa questão:
+          - Uma delas é importar o Link: import Link from 'next/link';
+          - 'colocar' o button inserido em um Link, da seguinte forma:
+            <Link href="/">
+              <button type="button">
+                <img src="/arrow-left.svg" alt="Voltar" />
+              </button>
+            </Link>
+
+            onde ao pressionar, será retornado para a home através do href="/".
+
+
+- Aula 04:
+
+- getStaticPaths é um método obrigatório ser utilizado em toda rota que esta utilizando
+geração estática(getStaticProps) e que tenha parâmetros dinâmicos, ou seja, 
+que tenha colchetes no name do arquivo.
+- Então toda que tem o [], vai ser preciso informar  método getStaticPaths
+- Entendendo o método: 
+    - Principal momento em que o next vai gerar a página estática da nossa aplicação 
+    é no momento do build
+    - Anteriormente, aula 02 mais ou menos, foi comentado quando foi apresentado todo o 
+    JSON em tela, nesta parte  Diego apresentou que a parte de geração estática, so funciona 
+    no nosso projeto, se executarmos ele como se estivesse em produção, para isso
+    criamos uma build do projeto, através d sudo yarn build, já com o servidor em 'pé', desta forma, 
+    o servidor do next, gerou uma versão estática da página, da home... é possivel verificar 
+    no terminal que está rodando a build
+    - Se o next so gera essa versão estática somente no momento de rodar o build, cmo vai construir uma 
+    versão estática da página de episódios, se no momento da build ele nã sabe qual episódio desejamos gerar uma 
+    versão estática.
+    - Para isso temos o slug, que é uma versão dinâmica
+    - no getStaticPaths, se faz o seguinte: defini quais episódios eu quero gerar de forma estática no 
+    momento da build
+        - a passarmos paths: [], significa que nã vai ser gerado de forma estática nenhum episódio no momento
+        da build
+        - se no lugar dos paths a gente retornasse um parâmetro(Objeto), passando primeiramente 
+        params e inserindo o slug, ficaria da seguinte forma:
+
+        export const getStaticPaths: GetStaticPaths = async () => {
+          return {
+            paths: [
+              { 
+                params: { 
+                  slug: 'a-importancia-da-contribuicao-em-open-source' 
+                } 
+              }
+            ],
+            fallback: 'blocking'
+          }
+        }
+
+        - Uso do fallback: 
+          - ao passarmos o paths vazio, o build não vai gerar nenhum objeto de forma estática, 
+          ou seja, nenhuma página vai ser gerada no momento da build, mas o que determina o comportamento
+          de quando uma pessoa acessa a página / um episódio que não foi gerado estaticamente:
+          é o fallback
+           - ao passar o fallback false, o que acontece é o seguinte, se a pessoa acessar a página estática
+           de um episódio e esse episódio não foi gerado no momento da build, ou seja, ele não foi passado 
+           dentro dos paths, ele vai retornar 404, ou seja, não encontrado
+           - a definir o fallback como true e alguém acessar um episódio e esse episódio, não foi gerado 
+           anteriormente de forma estática, ele vai tentar buscar os dados daquele novo episódio, 
+           que a pessoa ta acessando, para criar uma página estática daquele episódio, depois salvar o disco,
+           mas o fallback:true, faz com que a requisição para buscar  os dados de um episódio, essa requisição
+           que esta dentro do getStaticProps, a chama API, aconteça pelo lado do client, ou seja, pélo lado
+           do browser
+
+
+      - Arquitetura: 
+
+          - client(browser) - next.js (node.js) - server (back-end)
+          - ao alterarmos o fallback para true, ele rodaria no client(browser)
+          - ao alterarmos o fallback para blocking, ee rodaria no next.js (node.js)
+          
+
+      - A utilizar o fallback como blocking, estará executando o processo em si na camada do 
+      next.js e iss resultara em, quando a pessoa clicar no link, a pessoa so vai ser navegada 
+      pra tela, quando os dados já estiverem sido carregados. Para questões de SO, essa é a melhor opção.
+      Porque se caso um crawler for acessar um conteúdo da nossa aplicação, que ainda não foi gerado 
+      de forma estática, esse conteúdo também, digamos a página vai aguardar o conteúdo ser carregado, 
+      para ai então ser exibido.
+
+      - após toda essa gama de informações, qual seria o mais recomendado?
+        - imaginamos a criação de um e-commerce, onde temos duas entidades principais: categorias e produtos
+        - imaginamos de maneira fictícia, que o e-commerc, tenha 50 categorias
+        - no paath podemos passar as 50 categorias, desta forma, no momento do build o next 
+        já vai construir a página dessas 50 categorias e vai deixar pronto para acesso dos usuários
+        ou podemos pensar em somente aquelas categorias que mais são acessadas
+        -  então, iríamos no back-end, fazemos uma requisição fetch e buscamos as categorias mais acessadas
+        ou episódios de podcast mais acessados... Quando fazemos isso e passamos no path, no momento da build, 
+        o next vai gerar estaticamente somente os que são mais acessados e o restante, como foi passado 
+        fallback cmo blocking, vai sendo gerado conforme as pessoas vão acessando, ou seja, conforme os usuários 
+        acessam a página, estas são geradas de forma estática.
+        - este processo se chama incremental static regeneration
+
+
+    - ContextAPI:
+      - Uma funcionalidade do React que permite compartilhar dados entre componentes da nossa aplicação
+
+      - Efetuando a comunicação dos componentes, para reproduzir um som e mostrar qual episode esta tocando ao 
+      clicar no button de play
+        - mas como fazer isso?
+          - Inicialmente criamos um folder dentro do src(aplicação), com nome de contexts
+          - dentro de contexts, criaremos o PlayerContext.ts
+              - Onde, iremos importar o createContext do react e criar uma const PlayerContext do tipo 
+              createContext:
+                    import { createContext } from 'react';
+
+                    //passando um valor padrão para o CreateContext, só para definir o formato dos dados que
+                    //serão salvos neste componente
+                    export const PlayerContext = createContext(''); 
+              - Após o passo anterior, é preciso acessar o _app.tsx, ir até aonde se localiza o 
+              componente que carrega toda a home e o player e 'envolver', através de um componente 
+              que existe dentro do PlayerContext, da seguinte forma:
+                  <PlayerContext.Provider value={'Brunno'}>
+                    <div className={styles.wrapper}>
+                      <main>
+                        <Header />
+                        <Component {...pageProps} />
+                      </main>
+                      <Player />
+                    </div>
+                  </PlayerContext.Provider>
+
+            - Agra dentro do _app.tsx, criamos a função play, passando como parâmetro
+            um episode e irá 'jogar' dentro da episodeList, através do setEpisodeList([episode]) 
+            e o setCurrentEpisodeIndex(0), ou seja, forçando seu valor para zero, caso ainda não tenha 
+            retornado, ficando assim a função:
+              function play(episode) {
+                setEpisodeList([episode]);
+                setCurrentEpisodeIndex(0);
+              }
+
+              - mas como acessaremos essa função no component da Home ?
+                - Passamos a função play também no PlayerContext, porém, inicialmente dará erro, 
+                pois precisamos identificar na tipagem que existe uma função play:
+                  - Acessamos  PlayerContext.ts
+                    - e inserimos a função na tipagem:
+                        type PlayerContextData = {
+                          episodeList: Episode[];
+                          currentEpisodeIndex: number;
+                          play: (episode: Episode) => void;
+                        };
+
+                        - desta forma no _app, vi parar de dar um erro.
+                        - agra na Home, podemos ir ate o button de play, chamar uma função de click,
+                        precisamos criar uma arrow function, passando a function play e como parâmetro, 
+                        passamos um episode e agra tudo funciona ja de maneira harmonica:
+                            <button type="button" onClick={() => play(episode)}>
+                              <img src="/play-green.svg" alt="Tocar episódio" />
+                            </button>
+
+                        - agora pra finalizar esta parte, vamos direto no Player, presente
+                        em /Player/index.tsx
+                          - nas informações do player, buscaremos o episodeList e o currentEpisodeIndex
+                          e para determinar qual episódio que esta Tocando, basicamente pegamos nossa
+                          episodeList e passamos como parâmetro o currentEpisodeIndex, porém, 
+                          se a lista estiver vazia, não vai retornar nada em episode, mas irei tratar essa 
+                          questão...
+                          - agora no return, dentro do Header, ande está o tocando agora iremos passar o 
+                          title do episode, para mostrar qual podcast está tocando, ficando tudo assim:
+
+                              informações do player:
+                                const { episodeList, currentEpisodeIndex} = useContext(PlayerContext)
+
+                                const episode = episodeList[currentEpisodeIndex]
+
+                              Header: 
+                                <header>
+                                  <img src="/playing.svg" alt="Tocando agora" />
+                                  <strong>Tocando agora {episode?.title}</strong>
+                                </header>
+
+                                Obs.: O operador ?, é um operador ternário, aonde será verificado 
+                                antes se tem algum tipo de valor, para ai então, o title ser mostrado.
+
+
+              - Agora finalizar as funcionalidades e conseguir fazer o audio sair tocando:
+                  - Personalizando o player: 
+                      em styles.module.scss, faremos assim:
+                        .currentEpisode {
+                          text-align: center;
+
+                          img {
+                            border-radius: 1.5rem;
+                          }
+
+                          strong {
+                            display: block;
+                            margin-top: 2rem;
+                            font: 600 1.25rem lexend,sans-serif;
+                            line-height: 1.75rem;
+                          }
+
+                          span {
+                            display: block;
+                            margin-top: 1rem;
+                            opacity: 0.6;
+                            line-height: 1.5rem;
+                          }
+
+                        }
+
+                        e no index.tsx do player, colocamos um ternário, para deixar ou não os buttons de reprodução
+                        ativos ou não.
+                        <footer className={!episode ? styles.empty : ''}>
+                            //código omitido
+                        </footer>
+
+                  
+                  - mexendo agora no slider do player:
+                    - usaremos uma lib chamada rc-slider:
+                        - sudo yarn add rc-slider
+                        - no home do player, vamos importar algumas coisas:
+                          - import Slider from 'rc-slider'; && import 'rc-slider/assets/index.css';
+                        - Ainda no home, vamos mexer no footer para criar e estilizar o slider:
+                            <footer className={!episode ? styles.empty : ''}>
+                              <div className={styles.progress}>
+                                <span>00:00</span>
+                                <div className={styles.slider}>
+                                    { episode ? (
+                                      <Slider 
+                                        trackStyle = {{ backgroundColor: '#04d361' }}
+                                        railStyle = {{ backgroundColor: '#9f75ff' }}
+                                        handleStyle = {{ borderColor: '#04d361', borderWidth: 4}}
+                                      />
+                                    ) : (
+                                      <div className={styles.emptySlider} />
+                                    )}
+                                </div>
+                                <span>00:00</span>
+                              </div>
+
+                              /* código omitido */
+
+                            </footer>
+
+                - Fazer o botão de play/pause realmente iniciar e parar a reprodução do episódio:
+                   - A tag audio é uma tag nativa do HTML, para conseguir controlar o elemento audio, usando 
+                   javascript, é preciso ter uma forma de acessar este elemento de uma forma imperativa, preciso
+                   conseguir acessar este elemento e executar funções lá dentro...
+                    - por exemplo, no javascript tradicional, fazemos assim:
+                        - document.getElementById('').play
+
+                    - quando precisamos fazer isso no React, a gente precisa acessar um elemento nativo, 
+                    realizar uma ação nele de forma manual, como um foco em um input, chamamos esta ação no 
+                    react de refs, ou seja, precisamos criar uma referência para aquele elemento que iremos 
+                    manipular, então dentro do index.tsx do Player:
+                        - criamos uma referência: 
+                            - uma boa prática é criar a referencia como null
+                            - neste ponto também utilizamos typescript
+                            - Ao utilizarmos typescript com HTML, ao colocarmos o HTMLAudioElement, pois, estamos armazenando
+                            um elemento de audio do HTML, fornecendo assim uma inteligência no momento que eu for utilizar
+                            essa referência do aúdio, para saber quais métodos existem lá dentro, quais informações, o que eu posso 
+                            utilizar
+                                const audioRef = useRef<HTMLAudioElement>(null); //função que vem dentro do react
+
+                                - agora dentro do audio em si, é passado a ref:
+                                    { episode && (
+                                      <audio 
+                                        src={ episode.url }
+                                        ref={ audioRef }
+                                        autoPlay
+                                      />
+                                    )}
+
+
                 
