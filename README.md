@@ -1,8 +1,7 @@
-# podcastrnext
-<h3>PodCastr - Player para executar episódios de um podcast.</h3>
+# PodCastr - Player para executar episódios de um podcast.
 
 
-<h1> Comandos para subir o projeto: </h1>
+<h3> Comandos para subir o projeto: </h3>
 
 <ul>
   
