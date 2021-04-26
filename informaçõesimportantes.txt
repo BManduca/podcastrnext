@@ -4,7 +4,7 @@ git add README.md ou git add .
 git commit -m "first commit"
 git branch -M main
 git remote add origin https://github.com/BManduca/Nome_diretorio.git
-git push -u origin main
+git push origin main
 ----------------------------------------------------------------------
 
 Next.js
@@ -707,7 +707,7 @@ realizando a inserção te tempo máximo e inicial no slider:
           tempo em segundos o progresso já percorreu.
 
   - agora na tag audio, será adicionando o evento onLoadedMetadata
-    - este evento ele dispara, assim que o player conseguir carregar os dados do episodio e dentro deste 
+    - este evento ele dispara, assim que o player conseguir carregar os dados do episódio e dentro deste 
     evento iremos disparar uma function  
   - criamos a function setupProgressListener, para passar como parâmetro para o evento onLoadedMetadata, 
   onde a function ficara assim:
