@@ -686,4 +686,152 @@ que tenha colchetes no name do arquivo.
                                     )}
 
 
-                
+Aula 05:
+
+realizando a inserção te tempo máximo e inicial no slider:
+  - Tempo máximo:
+      - aonde estava o tempo máximo do slider, colocaremos um convertDurationToTimeString(episode?.duration ?? 0)
+      - o ? serve, para verificar se caso o episódio não existir, não vai ser possível acessar a propriedade 
+      duration
+      - o ?? significa que quando não houver a propriedade duration, retorne o valor 0, ou seja, não tem episódio
+      nenhum tocando.
+
+      - ficando desta forma:
+        <span>{convertDurationToTimeString(episode?.duration ?? 0)}</span>
+
+  - Tempo inicial: 
+      - inicialmente criaremos um state da seguinte forma:
+        - const [progress, setProgress] = useState(0);
+          - lembrando de sempre ver se importou o useState.
+          - passando zero como parâmetro inicial 0, esse progresso ele armazena, quanto 
+          tempo em segundos o progresso já percorreu.
+
+  - agora na tag audio, será adicionando o evento onLoadedMetadata
+    - este evento ele dispara, assim que o player conseguir carregar os dados do episodio e dentro deste 
+    evento iremos disparar uma function  
+  - criamos a function setupProgressListener, para passar como parâmetro para o evento onLoadedMetadata, 
+  onde a function ficara assim:
+      function setupProgressListener() {
+        audioRef.current.currentTime = 0;
+
+        audioRef.current.addEventListener('timeUpdated', () => {
+          setProgress(audioRef.current.currentTime);
+        })
+      }
+
+      - porque foi passando zero no currentTime? Pois, sempre que mudar de um som para outro, o tempo currentTime
+      do player sempre vai ser resetado.
+      - agora colocaremos o audioRef, para ouvir um evento timeUpdated, onde ele é disparado sempre
+      ou várias vezes enquanto o nosso aúdio esta tocando 
+      - dentro do audioRef colocaremos um setProgress, recebendo como parâmetro 
+      audioRef.current.currentTime, fazendo assim retornar o tempo atual do player
+      - porém, desta forma que está agora o setProgress, o tempo current não vai ser apresentado de forma 
+      arredondada, por isso, faremos o seguinte: 
+        - setProgress(Math.floor(audioRef.current.currentTime));
+        - resultando assim:
+          function setupProgressListener() {
+            audioRef.current.currentTime = 0;
+
+            audioRef.current.addEventListener('timeUpdated', () => {
+              setProgress(Math.floor(audioRef.current.currentTime));
+            })
+          }
+
+
+  - agora vamos efetuar o funcionamento do slider:
+    - dentro do slider, iremos utilizar uma propriedade chamada max, ou seja, qual o valor 
+    máximo deste slider, como estamos controlando tudo em segundos, vamos utilizar qual a duração
+    máxima que o slider pode chegar, que é episode.duration, retornando assim o número de 
+    segundos que se tem no episode.
+    - passaremos também um value, para marcar o quanto o episode já progrediu
+    ficará desta forma:
+      <Slider 
+        max={episode.duration}
+        value={progress}
+        trackStyle = {{ backgroundColor: '#04d361' }}
+        railStyle = {{ backgroundColor: '#9f75ff' }}
+        handleStyle = {{ borderColor: '#04d361', borderWidth: 4}}
+      />
+
+- Implementando o uso e movimentação do slider:
+  - Dentro do slider, no index.tsx do player, colocaremos a função onChange, 
+  que é pra quando o usuário arrasta a bolinha do slider, e ficará da seguinte forma:
+      <Slider 
+        max={episode.duration}
+        value={progress}
+        onChange={handleSeek}
+        trackStyle = {{ backgroundColor: '#04d361' }}
+        railStyle = {{ backgroundColor: '#9f75ff' }}
+        handleStyle = {{ borderColor: '#04d361', borderWidth: 4}}
+      />
+      
+    - em seguida criamos a função handleSeek: 
+      function handleSeek(amount: number) {
+        audioRef.current.currentTime = amount;
+        setProgress(amount);
+      }
+
+      - colocamos essas duas propriedades para registrar o progresso da 'bolinha' do slider e não 
+      somente do progresso do aúdio, que aconteceria se colocássemos somente a linha
+      audioRef.current.currentTime = amount;
+
+
+- ao testar o shuffle, percebemos que não funcionou como esperávamos, pois, talvez
+não criamos a lógica de quando o aúdio chegar no final, ele tocar o próximo, desta forma, 
+dentro da tag audio, presente no index.tsx do player, iremos adicionar a função onEnded={},
+que é executada quando o aúdio chega no final.
+
+<Slider 
+  max={episode.duration}
+  value={progress}
+  onChange={handleSeek}
+  trackStyle = {{ backgroundColor: '#04d361' }}
+  railStyle = {{ backgroundColor: '#9f75ff' }}
+  handleStyle = {{ borderColor: '#04d361', borderWidth: 4}}
+/>
+
+e a função handleSeek, fica assim:
+function handleSeek(amount: number) {
+  audioRef.current.currentTime = amount;
+  setProgress(amount);
+}
+
+- agora o slider funciona perfeitamente, porém, testamos que o shuffle ainda não
+está funcionando:
+
+- implantamos a função onEnded, na tag audio, passando como parâmetro, handleEpisodeEnded
+
+- aqui como utiliza o hasNext, vai ser preciso alterar a lógica dele, 
+pois, o hasNext era somente se tivéssemos, um próximo episode, 
+mas se fizermos em modo aleatório o next deveria funcionar também,
+mas faremos assim se o o player está em shuffling ou se tem um próximo episode. ficando
+desta forma:
+
+const hasNext = isShuffling || (currentEpisodeIndex + 1) < episodeList.length;
+
+- quando acabar o som, vamos criar um som no PlayerContext, chamada clearPlayerState, é uma 
+função que basicamente vai limpar o player, ou seja, vai deixar o tempo zerado:
+
+function clearPlayerState() {
+  setEpisodeList([]);
+  setCurrentEpisodeIndex(0);
+}
+
+- realizamos as importações corretamente
+
+e agora criamos a função:
+function handleEpisodeEnded() {
+  if(hasNext) {
+    playNext()
+  } else {
+    clearPlayerState()
+  }
+}
+
+
+
+- Proxímos passos: 
+  - fazer o podcastr responsivo
+  - PWA -> pacote next-pwa
+  - thema dark
+  - Electrum -> app desktop
